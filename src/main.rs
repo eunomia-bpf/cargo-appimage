@@ -263,13 +263,17 @@ fn main() -> Result<()> {
         let runtime_file = std::env::var("CARGO_APPIMAGE_RUNTIME_FILE").ok();
         let appimage_bin =
             std::env::var("CARGO_APPIMAGE_TOOL_BIN").unwrap_or_else(|_| "appimagetool".to_string());
+        let output_file = std::env::var("CARGO_APPIMAGE_OUT_FILE").ok();
         println!("Use appimagetool: {}", appimage_bin);
         println!("Use runtime file: {:?}", runtime_file);
-
+        println!("Out file: {:?}", output_file);
         let mut bin_args = args.to_vec();
-        bin_args.push(appdirpath.into_os_string().into_string().unwrap());
         if let Some(v) = runtime_file {
             bin_args.push("--runtime-file".to_string());
+            bin_args.push(v);
+        }
+        bin_args.push(appdirpath.into_os_string().into_string().unwrap());
+        if let Some(v) = output_file {
             bin_args.push(v);
         }
         Command::new(appimage_bin)

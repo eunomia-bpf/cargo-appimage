@@ -41,7 +41,7 @@ fn main() -> anyhow::Result<()> {
         argv0,
         parent.join("usr/bin/bin").as_os_str().to_owned(),
     ];
-    args_list.extend(std::env::args().skip(1).map(|v| OsString::from(v)));
+    args_list.extend(std::env::args().skip(1).map(OsString::from));
     let err = exec::execvp(loader_path, args_list);
     eprintln!("Error: {}", err);
     Ok(())
