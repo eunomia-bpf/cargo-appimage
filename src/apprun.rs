@@ -1,4 +1,4 @@
-use std::ffi::OsString;
+use std::{env::set_current_dir, ffi::OsString};
 
 use anyhow::{bail, Context};
 use walkdir::WalkDir;
@@ -42,6 +42,8 @@ fn main() -> anyhow::Result<()> {
         parent.join("usr/bin/bin").as_os_str().to_owned(),
     ];
     args_list.extend(std::env::args().skip(1).map(OsString::from));
+    let owd = std::env::var("OWD").unwrap();
+    set_current_dir(owd).unwrap();
     let err = exec::execvp(loader_path, args_list);
     eprintln!("Error: {}", err);
     Ok(())
