@@ -22,10 +22,7 @@ fn main() -> anyhow::Result<()> {
         bail!("Failed to find a loader (name started with `ld-linux`)");
     }
     let loader_path = loader_path.unwrap();
-    std::env::set_var(
-        "LD_LIBRARY_PATH",
-        format!("{}/usr/lib/aarch64-linux-gnu:{}/lib/aarch64-linux-gnu:{}/usr/lib/:{}/usr/lib/i386-linux-gnu/:{}/usr/lib/x86_64-linux-gnu/:{}/usr/lib32/:{}/usr/lib64/:{}/lib/:{}/lib/i386-linux-gnu/:{}/lib/x86_64-linux-gnu/:{}/lib32/:{}/lib64/{}",parent.display(),parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), if let Ok(ldlibpath) = std::env::var("LD_LIBRARY_PATH") { ":".to_string() + &ldlibpath } else { String::new() }),
-    );
+    let ld_library_path = format!("{}/usr/lib/aarch64-linux-gnu:{}/lib/aarch64-linux-gnu:{}/usr/lib/:{}/usr/lib/i386-linux-gnu/:{}/usr/lib/x86_64-linux-gnu/:{}/usr/lib32/:{}/usr/lib64/:{}/lib/:{}/lib/i386-linux-gnu/:{}/lib/x86_64-linux-gnu/:{}/lib32/:{}/lib64/{}",parent.display(),parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), parent.display(), if let Ok(ldlibpath) = std::env::var("LD_LIBRARY_PATH") { ":".to_string() + &ldlibpath } else { String::new() });
     std::env::set_var(
         "XDG_DATA_DIRS",
         format!(
@@ -39,6 +36,8 @@ fn main() -> anyhow::Result<()> {
         loader_path.as_os_str().to_owned(),
         OsString::from("--argv0"),
         argv0,
+        OsString::from("--library-path"),
+        OsString::from(ld_library_path),
         parent.join("usr/bin/bin").as_os_str().to_owned(),
     ];
     args_list.extend(std::env::args().skip(1).map(OsString::from));
