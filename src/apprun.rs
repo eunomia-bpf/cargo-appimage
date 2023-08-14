@@ -32,6 +32,7 @@ fn main() -> anyhow::Result<()> {
         ),
     );
     let argv0 = std::env::args_os().next().unwrap();
+    std::env::set_var("EUNOMIA_APPIMAGE_DEFINED_LD_LIBRARY_PATH", &ld_library_path);
     let mut args_list = vec![
         loader_path.as_os_str().to_owned(),
         OsString::from("--argv0"),
