@@ -279,7 +279,7 @@ fn main() -> Result<()> {
         Command::new(appimage_bin)
             .args(bin_args)
             .env("ARCH", platforms::target::TARGET_ARCH.as_str())
-            .env("VERSION", pkg.version.as_str())
+            .env("VERSION", pkg.version.clone().unwrap().as_str())
             .status()
             .context("Error occurred: make sure that appimagetool is installed")?;
     }
